@@ -54,7 +54,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [feedback, setFeedback] = useState(`Click to unleash your NFT.`);
+  const [feedback, setFeedback] = useState(`Click to unleash your NFT. Make sure you have a hall pass on discord before unleashing!`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
