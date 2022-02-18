@@ -3,6 +3,15 @@ import Web3EthContract from "web3-eth-contract";
 import Web3 from "web3";
 // log
 import { fetchData } from "../data/dataActions";
+import Web3Modal from "web3modal";
+
+const providerOptions = {};
+
+const web3Modal = new Web3Modal({
+  network: "mainnet",
+  cacheProvider: true,
+  providerOptions
+});
 
 const connectRequest = () => {
   return {
@@ -47,10 +56,12 @@ export const connect = () => {
         Accept: "application/json",
       },
     });
+
+    const provider = await web3Modal.connect();
+
     const CONFIG = await configResponse.json();
-    const { ethereum } = window;
-    const metamaskIsInstalled = ethereum && ethereum.isMetaMask;
-    if (metamaskIsInstalled) {
+    const ethereum = provider;
+    if (ethereum) {
       Web3EthContract.setProvider(ethereum);
       let web3 = new Web3(ethereum);
       try {
