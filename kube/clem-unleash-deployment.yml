@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  labels:
+    service: clem-unleash
+  name: clem-unleash
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      service: clem-unleash
+  template:
+    metadata:
+      labels:
+        service: clem-unleash
+    spec:
+      containers:
+      - image: zquestz/clem-unleash:latest
+        imagePullPolicy: Always
+        name: clem-unleash
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "8Mi"
+      restartPolicy: Always
