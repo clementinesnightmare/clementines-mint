@@ -818,7 +818,7 @@ contract ClementineNFT2 is ERC721A, Ownable {
     }
 
     function seedHallPass(address[] memory addresses, uint8[] memory counts)
-        public
+        external
         onlyOwner
     {
         require(addresses.length == counts.length);
@@ -830,7 +830,7 @@ contract ClementineNFT2 is ERC721A, Ownable {
         hallPasses += addresses.length;
     }
 
-    function removeHallPass(address[] memory addresses) public onlyOwner {
+    function removeHallPass(address[] memory addresses) external onlyOwner {
         for (uint256 i = 0; i < addresses.length; i++) {
             hallPass[addresses[i]] = 0;
         }
