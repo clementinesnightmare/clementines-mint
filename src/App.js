@@ -54,7 +54,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [feedback, setFeedback] = useState(`Click to unleash your NFT. Make sure you verify your wallet is in the final list in our Discord! Do not try to mint otherwise!`);
+  const [feedback, setFeedback] = useState(`Click to unleash your Phase 2 NFT!`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -82,7 +82,7 @@ function App() {
     let totalGasLimit = String(gasLimit * mintAmount);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
-    setFeedback(`Unleashing your ${CONFIG.NFT_NAME} NFT...`);
+    setFeedback(`Unleashing your ${CONFIG.NFT_NAME} Phase 2 NFT...`);
     setClaimingNft(true);
     blockchain.smartContract.methods
       .mint(mintAmount)
@@ -100,7 +100,7 @@ function App() {
       .then((receipt) => {
         console.log(receipt);
         setFeedback(
-          `You have unleashed a ${CONFIG.NFT_NAME} NFT! Welcome to the Neighborhood!`
+          `You have unleashed a ${CONFIG.NFT_NAME} Phase 2 NFT! Welcome to the Neighborhood!`
         );
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
@@ -177,7 +177,7 @@ function App() {
                 <StyledLink target={"_blank"} href={CONFIG.MARKETPLACE_LINK}>
                   <img style={{
                     width: "250px",
-                  }} src="config/images/opensea.png" alt="Oasis" />
+                  }} src="config/images/opensea.png" alt="OpenSea" />
                 </StyledLink>
               </>
             ) : (

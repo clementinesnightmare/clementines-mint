@@ -1,6 +1,6 @@
 # Clementines Mint
 
-Simple minting site for Clementine's Nightmare.
+Simple minting site for Clementine's Nightmare Phase 1 & 2.
 
 ## Installation
 
