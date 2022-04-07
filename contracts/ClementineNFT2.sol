@@ -696,7 +696,7 @@ contract ClementineNFT2 is ERC721A, Ownable {
     uint256 public cost = 0.2 ether;
     uint256 public hallPassCost = 0.1 ether;
     uint256 public maxSupply = 10010;
-    uint256 public maxMintAmount = 10;
+    uint256 public maxMintAmount = 5;
     uint256 public hallPasses = 0;
     bool public paused = false;
     bool public revealed = false;

@@ -3,15 +3,25 @@ import Web3EthContract from "web3-eth-contract";
 import Web3 from "web3";
 // log
 import { fetchData } from "../data/dataActions";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3Modal from "web3modal";
 
-const providerOptions = {};
+const providerOptions = {
+  injected: {},
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      infuraId: "0c6e3e7c585042f9aac96f45d526b95e"
+    }
+  }
+};
 
 const web3Modal = new Web3Modal({
   network: "mainnet",
-  cacheProvider: true,
+  cacheProvider: false,
   providerOptions
 });
+web3Modal.clearCachedProvider();
 
 const connectRequest = () => {
   return {
@@ -57,20 +67,16 @@ export const connect = () => {
       },
     });
 
+    web3Modal.clearCachedProvider();
     const provider = await web3Modal.connect();
-
     const CONFIG = await configResponse.json();
-    const ethereum = provider;
-    if (ethereum) {
-      Web3EthContract.setProvider(ethereum);
-      let web3 = new Web3(ethereum);
+
+    if (provider) {
+      Web3EthContract.setProvider(provider);
+      let web3 = new Web3(provider);
       try {
-        const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        const networkId = await ethereum.request({
-          method: "net_version",
-        });
+        const accounts = await web3.eth.getAccounts();
+        const networkId = await web3.eth.net.getId();
         if (networkId == CONFIG.NETWORK.ID) {
           const SmartContractObj = new Web3EthContract(
             abi,
@@ -84,10 +90,10 @@ export const connect = () => {
             })
           );
           // Add listeners start
-          ethereum.on("accountsChanged", (accounts) => {
+          provider.on("accountsChanged", (accounts) => {
             dispatch(updateAccount(accounts[0]));
           });
-          ethereum.on("chainChanged", () => {
+          provider.on("chainChanged", () => {
             window.location.reload();
           });
           // Add listeners end
