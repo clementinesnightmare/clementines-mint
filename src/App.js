@@ -70,7 +70,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [disableUnleash, setDisableUnleash] = useState(false);
+  const [disableUnleash, setDisableUnleash] = useState(true);
   const [feedback, setFeedback] = useState(`Click to unleash your Phase 2 NFT!`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({

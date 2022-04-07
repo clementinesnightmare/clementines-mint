@@ -67,7 +67,6 @@ export const connect = () => {
       },
     });
 
-    web3Modal.clearCachedProvider();
     const provider = await web3Modal.connect();
     const CONFIG = await configResponse.json();
 
