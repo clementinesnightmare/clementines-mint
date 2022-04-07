@@ -19,7 +19,7 @@ export const StyledConnect = styled.button`
 export const StyledUnleash = styled.button`
   width: 250px;
   height: 62px;
-  cursor: pointer;
+  cursor: not-allowed;
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
@@ -54,6 +54,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
+  const [disableUnleash, setDisableUnleash] = useState(true);
   const [feedback, setFeedback] = useState(`Click to unleash your Phase 2 NFT!`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
@@ -235,7 +236,7 @@ function App() {
                     <s.SpacerSmall />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledUnleash
-                        disabled={claimingNft ? 1 : 0}
+                        disabled={(claimingNft || disableUnleash) ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();
