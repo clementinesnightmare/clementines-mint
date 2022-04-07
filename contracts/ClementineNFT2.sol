@@ -698,7 +698,7 @@ contract ClementineNFT2 is ERC721A, Ownable {
     uint256 public maxSupply = 10010;
     uint256 public maxMintAmount = 5;
     uint256 public hallPasses = 0;
-    bool public paused = false;
+    bool public paused = true;
     bool public revealed = false;
     bool public hallPassOnly = false;
     bool public limitPublic = true;
@@ -823,19 +823,25 @@ contract ClementineNFT2 is ERC721A, Ownable {
     {
         require(addresses.length == counts.length);
 
+        uint256 passCount;
+
         for (uint256 i = 0; i < addresses.length; i++) {
             hallPass[addresses[i]] = counts[i];
+            passCount += counts[i];
         }
 
-        hallPasses += addresses.length;
+        hallPasses += passCount;
     }
 
     function removeHallPass(address[] memory addresses) external onlyOwner {
+        uint256 passCount;
+
         for (uint256 i = 0; i < addresses.length; i++) {
+            passCount += hallPass[addresses[i]];
             hallPass[addresses[i]] = 0;
         }
 
-        hallPasses -= addresses.length;
+        hallPasses -= passCount;
     }
 
     function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
