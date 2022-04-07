@@ -1,9 +1,12 @@
 const initialState = {
   loading: false,
   totalSupply: 0,
+  hallPassOnly: false,
+  hallPass: 0,
   cost: 0,
   error: false,
   errorMsg: "",
+  saleMsg: "",
 };
 
 const dataReducer = (state = initialState, action) => {
@@ -20,9 +23,11 @@ const dataReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         totalSupply: action.payload.totalSupply,
-        // cost: action.payload.cost,
+        hallPassOnly: action.payload.hallPassOnly,
+        hallPass: action.payload.hallPass,
         error: false,
         errorMsg: "",
+        saleMsg: action.payload.hallPassOnly ? "Hall Pass Sale - " + action.payload.hallPass + " Remaining!" : "Public Sale!",
       };
     case "CHECK_DATA_FAILED":
       return {

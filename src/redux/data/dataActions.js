@@ -29,15 +29,22 @@ export const fetchData = () => {
         .getState()
         .blockchain.smartContract.methods.totalSupply()
         .call();
-      // let cost = await store
-      //   .getState()
-      //   .blockchain.smartContract.methods.cost()
-      //   .call();
+
+      let hallPassOnly = await store
+        .getState()
+        .blockchain.smartContract.methods.hallPassOnly()
+        .call();
+
+      let hallPass = await store
+        .getState()
+        .blockchain.smartContract.methods.hallPass(await store.getState().blockchain.account)
+        .call();
 
       dispatch(
         fetchDataSuccess({
           totalSupply,
-          // cost,
+          hallPassOnly,
+          hallPass
         })
       );
     } catch (err) {

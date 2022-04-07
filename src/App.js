@@ -5,6 +5,23 @@ import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
 
+export const StyledRoundButton = styled.button`
+  padding: 10px;
+  border-radius: 100%;
+  border: none;
+  background-color: var(--primary);
+  padding: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  color: var(--primary-text);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const StyledConnect = styled.button`
   width: 250px;
   height: 62px;
@@ -19,7 +36,6 @@ export const StyledConnect = styled.button`
 export const StyledUnleash = styled.button`
   width: 250px;
   height: 62px;
-  cursor: not-allowed;
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
@@ -54,7 +70,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [disableUnleash, setDisableUnleash] = useState(true);
+  const [disableUnleash, setDisableUnleash] = useState(false);
   const [feedback, setFeedback] = useState(`Click to unleash your Phase 2 NFT!`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
@@ -69,7 +85,9 @@ function App() {
     SYMBOL: "",
     MAX_SUPPLY: 1,
     WEI_COST: 0,
+    HP_WEI_COST: 0,
     DISPLAY_COST: 0,
+    HP_DISPLAY_COST: 0,
     GAS_LIMIT: 0,
     MARKETPLACE: "",
     MARKETPLACE_LINK: "",
@@ -77,7 +95,7 @@ function App() {
   });
 
   const claimNFTs = () => {
-    let cost = CONFIG.WEI_COST;
+    let cost = data.hallPassOnly ? CONFIG.HP_WEI_COST : CONFIG.WEI_COST;
     let gasLimit = CONFIG.GAS_LIMIT;
     let totalCostWei = String(cost * mintAmount);
     let totalGasLimit = String(gasLimit * mintAmount);
@@ -106,6 +124,23 @@ function App() {
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
       });
+  };
+
+  const decrementMintAmount = () => {
+    let newMintAmount = mintAmount - 1;
+    if (newMintAmount < 1) {
+      newMintAmount = 1;
+    }
+    setMintAmount(newMintAmount);
+  };
+
+  const incrementMintAmount = () => {
+    let newMintAmount = mintAmount + 1;
+    let max = (data.hallPassOnly && data.hallPass > 0) ? data.hallPass : 5
+    if (newMintAmount > max) {
+      newMintAmount = max;
+    }
+    setMintAmount(newMintAmount);
   };
 
   const getData = () => {
@@ -186,10 +221,8 @@ function App() {
                 <s.TextTitle
                   style={{ textAlign: "center", color: "var(--accent-text)" }}
                 >
-                  Unleash for {CONFIG.DISPLAY_COST}{" "}
-                  {CONFIG.NETWORK.SYMBOL}!
+                  {data.saleMsg}
                 </s.TextTitle>
-                <s.SpacerSmall />
                 {blockchain.account === "" ||
                   blockchain.smartContract === null ? (
                   <s.Container ai={"center"} jc={"center"}>
@@ -225,6 +258,45 @@ function App() {
                   </s.Container>
                 ) : (
                   <>
+                    <s.TextTitle
+                      style={{ textAlign: "center", color: "var(--accent-text)" }}
+                    >
+                      Unleash for {data.hallPassOnly ? CONFIG.HP_DISPLAY_COST : CONFIG.DISPLAY_COST}{" "}
+                      {CONFIG.NETWORK.SYMBOL}!
+                    </s.TextTitle>
+                    <s.SpacerSmall />
+                    <s.Container ai={"center"} jc={"center"} fd={"row"}>
+                      <StyledRoundButton
+                        style={{ lineHeight: 0.4 }}
+                        disabled={claimingNft ? 1 : 0}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          decrementMintAmount();
+                        }}
+                      >
+                        -
+                      </StyledRoundButton>
+                      <s.SpacerMedium />
+                      <s.TextDescription
+                        style={{
+                          textAlign: "center",
+                          color: "var(--accent-text)",
+                        }}
+                      >
+                        {mintAmount}
+                      </s.TextDescription>
+                      <s.SpacerMedium />
+                      <StyledRoundButton
+                        disabled={claimingNft ? 1 : 0}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          incrementMintAmount();
+                        }}
+                      >
+                        +
+                      </StyledRoundButton>
+                    </s.Container>
+                    <s.SpacerSmall />
                     <s.TextDescription
                       style={{
                         textAlign: "center",
@@ -236,11 +308,14 @@ function App() {
                     <s.SpacerSmall />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledUnleash
-                        disabled={(claimingNft || disableUnleash) ? 1 : 0}
+                        disabled={(claimingNft || disableUnleash || (data.hallPassOnly && data.hallPass == 0)) ? 1 : 0}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();
                           getData();
+                        }}
+                        style={{
+                          cursor: (claimingNft || disableUnleash || (data.hallPassOnly && data.hallPass == 0)) ? "not-allowed" : "pointer"
                         }}
                       > </StyledUnleash>
                     </s.Container>
