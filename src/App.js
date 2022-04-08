@@ -136,7 +136,7 @@ function App() {
 
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
-    let max = (data.hallPassOnly && data.hallPass > 0) ? Math.min(data.hallPass, 5) : 5
+    let max = (data.hallPassOnly && data.hallPass > 0) ? data.hallPass : 5
     if (newMintAmount > max) {
       newMintAmount = max;
     }
